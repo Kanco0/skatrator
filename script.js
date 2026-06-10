@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         /* ---- fire & forget to backend (receipt shows regardless) ---- */
         try {
-            await fetch("https://skatrator-production.up.railway.app/api/orders", {
+            await fetch("https://proactive-surprise-production-d72e.up.railway.app/api/orders", {
                 method:  "POST",
                 headers: { "Content-Type": "application/json" },
                 body:    JSON.stringify({
