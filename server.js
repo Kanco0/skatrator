@@ -153,7 +153,8 @@ Order ref  : ${orderId}`
         res.json({ ok: true, orderId, warning: "Email delivery failed." });
     }
 });
-
+/* ---- Health check for Railway ---- */
+app.get("/", (req, res) => res.json({ status: "ok" }));
 /* ---- Catch-all for unknown routes ---- */
 app.use((req, res) => res.status(404).json({ error: "Not found." }));
 
