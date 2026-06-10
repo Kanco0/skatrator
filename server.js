@@ -12,7 +12,11 @@ const app = express();
 
 /* ---- CORS: only allow your Live Server origin ---- */
 app.use(cors({
-    origin: ["https://skatrator.netlify.app"],
+    origin: [
+        "https://radiant-cupcake-86895b.netlify.app",
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
     methods: ["POST"],
     allowedHeaders: ["Content-Type"]
 }));
