@@ -235,18 +235,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         /* ---- fire & forget to backend (receipt shows regardless) ---- */
         try {
-            await fetch("https://proactive-surprise-production-d72e.up.railway.app/api/orders", {
-                method:  "POST",
-                headers: { "Content-Type": "application/json" },
-                body:    JSON.stringify({
-                    name, email, phone, address,
-                    items: snapshot.map(i => ({ id: i.id, name: i.name }))
-                })
-            });
-        } catch (err) {
-            /* backend unreachable — receipt still shows, email won't go out */
-            console.warn("Backend unreachable:", err.message);
-        }
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    await fetch("https://proactive-surprise-production-d72e.up.railway.app/api/orders", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        signal:  controller.signal,
+        body:    JSON.stringify({
+            name, email, phone, address,
+            items: snapshot.map(i => ({ id: i.id, name: i.name }))
+        })
+    });
+    clearTimeout(timeout);
+} catch (err) {
+    console.warn("Backend unreachable:", err.message);
+}
 
         /* ---- record dedup signature ---- */
         lastOrderSig  = sig;
