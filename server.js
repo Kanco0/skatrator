@@ -4,11 +4,11 @@
    No customer data is stored anywhere.
    ============================================= */
 
-const express    = require("express");
-const cors       = require("cors");
-const nodemailer = require("nodemailer");
+const express = require("express");
+const cors    = require("cors");
+const Resend  = require("resend").Resend;
 
-const app = express();
+const resend  = new Resend(process.env.RESEND_API_KEY);
 
 /* ---- CORS: only allow your Live Server origin ---- */
 app.use(cors({
@@ -141,18 +141,24 @@ Order ref  : ${orderId}`
     };
 
     try {
-        await Promise.all([
-            mailer.sendMail(customerMail),
-            mailer.sendMail(adminMail)
-        ]);
-        console.log(`✉️  Emails sent for ${orderId}`);
-        res.json({ ok: true, orderId });
-    } catch (err) {
-        console.error("Email error:", err.message);
-        /* Still return 200 so the receipt shows — order was valid */
-        res.json({ ok: true, orderId, warning: "Email delivery failed." });
-    }
-});
+    await resend.emails.send({
+        from:    "Skatorator <onboarding@resend.dev>",
+        to:      email,
+        subject: `🛹 Order Confirmed — ${orderId}`,
+        text:    customerMail.text
+    });
+    await resend.emails.send({
+        from:    "Skatorator <onboarding@resend.dev>",
+        to:      "lachivr@gmail.com",
+        subject: `🚨 NEW ORDER — ${orderId}`,
+        text:    adminMail.text
+    });
+    console.log(`✉️  Emails sent for ${orderId}`);
+    res.json({ ok: true, orderId });
+} catch (err) {
+    console.error("Email error:", err.message);
+    res.json({ ok: true, orderId, warning: "Email delivery failed." });
+}
 /* ---- Health check for Railway ---- */
 app.get("/", (req, res) => res.json({ status: "ok" }));
 /* ---- Catch-all for unknown routes ---- */
