@@ -37,7 +37,7 @@ const mailer = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: "lachivr@gmail.com",
-        pass: "mgcg koiz ptba fsmn"  /* App password */
+        pass: "epor apne gkxo weak"  /* App password */
     }
 });
 
