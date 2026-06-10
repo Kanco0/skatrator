@@ -3,7 +3,7 @@ const cors    = require("cors");
 const Resend  = require("resend").Resend;
 
 const app    = express();
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend("re_QLJcMAQe_Ni9q8jMWwgFiFco3okBR9sTA");
 
 app.use(cors({
     origin: [
